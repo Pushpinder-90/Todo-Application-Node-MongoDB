@@ -12,15 +12,15 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp' , (err,db)=>{
 	console.log('Connected to MongoDb server');
 	// creating first document Todoss - check in Robomongo
 	// we cannot see the DB in Robomongo util we add some data into it , so inserting data into db
-	// db.collection('Todoss').insertOne({
-	// 	firstTodo :'something to do',
-	// 	completed : false
-	// 	},(err,result) => {
-	// 		if(err){
-	// 			return console.log('Unable to add TODO',err);
-	// 		}
-	// 		console.log(JSON.stringify(result.ops,undefined,2));
-	// 	});
+	db.collection('Todoss').insertOne({
+		firstTodo :'Go for Running',
+		completed : true
+		},(err,result) => {
+			if(err){
+				return console.log('Unable to add TODO',err);
+			}
+			console.log(JSON.stringify(result.ops,undefined,2));
+		});
 
 // to create users document - check in Robomongo
 // db.collection('Users').insertOne({

@@ -8,9 +8,9 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 var app = express();
-// confiuring middleware - this middleware will return  JSON which we pass into post request
+// confiuring middleware - this middleware will return  JSON which we have to pass into post request
 app.use(bodyParser.json());
- // configuring the routes
+ // configuring the routes and making POST requst
 app.post('/todos',(req,res)=>{
   console.log(req.body);
 // creating an instance of Todo model
@@ -19,12 +19,22 @@ app.post('/todos',(req,res)=>{
     completed: req.body.completed,
     completedAt : req.body.completedAt
   });
+  // saveing of an instance of model Todo
   todo.save().then((doc)=>{
     res.send(doc);
   },(err)=>{
     res.status(400).send(err);
   });
+});
 
+
+// fetching all the todos from collection
+app.get('/todos',(req,res)=>{
+    Todo.find().then((todos)=>{
+      res.send({todos}) // passing whole object inside of send()
+    },(err)=>{
+      res.status(400).send(err);
+    })
 });
 
 

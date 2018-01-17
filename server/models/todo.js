@@ -19,7 +19,7 @@ var Todo = mongoose.model('Todo',{
   }
 });
 
-
+// Adding gloablly use modules/variables
 module.exports={
   Todo
 };

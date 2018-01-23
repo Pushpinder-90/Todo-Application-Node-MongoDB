@@ -4,8 +4,12 @@
   "description": "all crud operations with mongodb in todo app",
   "main": "index.js",
   "scripts": {
+    "start" : "node server/server.js",
     "test": "mocha server/**/*.test.js",
     "test-watch": "nodemon --exec npm test"
+  },
+  "engines":{
+    "node":"6.2.2"
   },
   "author": "pushpinder singh",
   "license": "ISC",

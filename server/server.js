@@ -9,6 +9,7 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 var app = express();
+var port = process.env.PORT || 3000; // confiuring dynamic port for heroku
 // confiuring middleware - this middleware will return  JSON which we have to pass into post request
 app.use(bodyParser.json());
  // configuring the routes and making POST requst
@@ -20,7 +21,7 @@ app.post('/todos',(req,res)=>{
     completed: req.body.completed,
     completedAt : req.body.completedAt
   });
-  // saveing of an instance of model Todo
+  // saving of an instance of model Todo
   todo.save().then((doc)=>{
     res.send(doc);
   },(err)=>{
@@ -59,6 +60,6 @@ app.get('/todos/:id',(req,res)=>{
 });
 
 // setting up the server port
-app.listen(3000 , ()=>{
-  console.log('Server is up on 3000');
+app.listen(port , ()=>{
+  console.log(`Server is up on ${port}`);
 });

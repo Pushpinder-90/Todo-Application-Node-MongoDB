@@ -1,7 +1,8 @@
 // library Imports
+const _ = require('lodash');
 const {ObjectID} = require('mongodb');
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
 
 // Local Imports
 var {mongoose} = require('./db/mongoose');
@@ -69,12 +70,39 @@ app.delete('/todos/:id',(req,res)=>{
     if(!todo){
       return res.status(404).send();
     }
-    res.status(200).send(todo);
+    res.status(200).send({todo});
   }).catch((e)=>{
     res.status(400).send();
   });
 });
 
+// route to update todo items
+// using http PATCH method
+app.patch('/todos/:id',(req,res)=>{
+    var id = req.params.id;
+    // pick takes the body parameters array if the exist
+    var body = _.pick(req.body,['text','completed']);
+
+    if(!ObjectID.isValid(id)){
+      return res.status(404).send();
+    }
+// to getting body updation timestamp
+    if(_.isBoolean(body.completed) && body.completed){
+      body.completedAt = new Date().getTime();
+    }else{
+      body.completed = false;
+      body.completedAt = null;
+    }
+// Now query DB to update a todo by using findByIdAndUpdate
+Todo.findByIdAndUpdate(id,{$set: body},{new: true}).then((todo)=>{
+    if(!todo){
+      return res.status(404).send();
+    }
+    res.status(200).send({todo})
+  }).catch((e)=>{
+      res.status(400).send();
+  });
+});
 
 // setting up the server port
 app.listen(port , ()=>{

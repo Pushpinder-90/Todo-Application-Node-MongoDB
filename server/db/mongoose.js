@@ -4,7 +4,8 @@ var mongoose = require('mongoose');
 // mongoose return promises by default
 mongoose.Promise = global.Promise;
 // process.env.MONGODB_URI   -  Is Server DB url provided by 'heroku config'
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/TodoAppp');
+// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/TodoAppp'); // before setting env varaibles
+mongoose.connect(process.env.MONGODB_URI);
 
 // adding gobally use modules
 module.exports={

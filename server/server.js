@@ -11,7 +11,7 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 var app = express();
-var port = process.env.PORT || 3000 ; // confiuring dynamic port for heroku
+var port = process.env.PORT; // confiuring dynamic port for heroku
 // confiuring middleware - this middleware will return  JSON which we have to pass into post request
 app.use(bodyParser.json());
  // configuring the routes and making POST requst

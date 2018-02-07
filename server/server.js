@@ -31,6 +31,32 @@ app.post('/todos',(req,res)=>{
   });
 });
 
+// POST /users request for users- email,password, tokens
+app.post('/users',(req,res)=>{
+  console.log(req.body);
+var body = _.pick(req.body,['email','password']);
+var user = new User(body);
+
+user.save().then(()=>{
+    //res.status(200).send(user); // instead of sending response here call generateAuthToken
+    return user.generateAuthToken();
+  }).then((token)=>{
+    // res.status(200).send(user);
+    res.header('x-auth', token).send(user); // adding custom header(x-auth) here instead of status
+  }).catch((err)=>{
+    res.status(400).send(err);
+  })
+});
+
+// GET/ users fetching all users
+app.get('/users',(req,res)=>{
+  User.find().then((user)=>{
+  res.status(200).send({user});
+  },(err)=>{
+    res.status(400).send(err);
+  })
+});
+
 
 // fetching all the todos from collection
 app.get('/todos',(req,res)=>{

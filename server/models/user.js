@@ -51,6 +51,31 @@ UserSchema.methods.generateAuthToken = function(){
   });
 };
 
+
+
+
+// using statics here which is equivalent to model method findByToken()
+UserSchema.statics.findByToken = function (token) {
+  // now finding the associated user with this token
+  var User = this;  // here 'this' binds current document(user)
+  var decoded;   // jwt.verify() is going to throw error to using try catch block here
+
+  try {
+    decoded = jwt.verify(token, 'abc123');
+  } catch (e) {
+    // return Promise.reject();   can all use this short statement
+    return new Promise((resolve,reject)=>{
+      reject();
+    });
+  }
+
+  return User.findOne({
+    '_id': decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
+  });
+};
+
 // overiding mongoose methods
 UserSchema.methods.toJSON = function(){
     var user = this;

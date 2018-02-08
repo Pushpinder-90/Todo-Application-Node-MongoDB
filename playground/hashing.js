@@ -20,6 +20,7 @@ console.log(`Token  :${Token}`)
 // always return error if there is a change in token or secretKey
 var decoded = jwt.verify(Token, '123');
 console.log('decoded',decoded);
+console.log('decoded',decoded.id);
 //
 // var data = {
 //   id:4

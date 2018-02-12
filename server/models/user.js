@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 
 // creating UserScema to add methods
 var UserSchema  = new mongoose.Schema({
@@ -51,9 +52,6 @@ UserSchema.methods.generateAuthToken = function(){
   });
 };
 
-
-
-
 // using statics here which is equivalent to model method findByToken()
 UserSchema.statics.findByToken = function (token) {
   // now finding the associated user with this token
@@ -75,6 +73,22 @@ UserSchema.statics.findByToken = function (token) {
     'tokens.access': 'auth'
   });
 };
+
+// Middleware hooks 'pre' will execuet before every save
+UserSchema.pre('save',function(next){
+  var user = this;
+  //isModified() takes single field parameter returns Boolean
+  if(user.isModified('password')){
+    bcrypt.genSalt(10, (err,salt)=>{
+      bcrypt.hash(user.password, salt,(err,hash)=>{
+        user.password = hash;
+        next(); // save the updated document
+      });
+    });
+  }else{
+    next();
+  }
+});
 
 // overiding mongoose methods
 UserSchema.methods.toJSON = function(){

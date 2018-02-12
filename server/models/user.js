@@ -52,6 +52,20 @@ UserSchema.methods.generateAuthToken = function(){
   });
 };
 
+// for logout currently logged in user
+UserSchema.methods.removeToken = function(token){
+  // mongodb operator
+  // $pull  - pulls items from your array and remove if match certain criteria
+  var user = this;
+  return user.update({
+    $pull: {
+      tokens:{ // accessing the tokens object
+        token : token // matching token here
+      }
+    }
+  });
+}
+
 // using statics here which is equivalent to model method findByToken()
 UserSchema.statics.findByToken = function (token) {
   // now finding the associated user with this token

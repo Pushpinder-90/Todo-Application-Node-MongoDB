@@ -67,6 +67,15 @@ app.post('/users/login',(req,res)=>{
   });
 });
 
+// POST /users/logout -  this will delete the Token for the currently logged in user
+app.delete('/users/me/token', authenticate, (req,res)=>{
+  // calling an isntance method here removeToken()
+  req.user.removeToken(req.token).then((user)=>{
+    res.status(200).send({user});
+  },()=>{
+    res.status(400).send();
+  });
+});
 
 // GET/users  , authenticating token first ,its a private route without token will not return anything
 app.get('/users/me',authenticate,(req,res)=>{

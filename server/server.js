@@ -15,7 +15,8 @@ var app = express();
 var port = process.env.PORT; // confiuring dynamic port for heroku
 // confiuring middleware - this middleware will return  JSON which we have to pass into post request
 app.use(bodyParser.json());
- // configuring the routes and making POST requst
+
+ // configuring the routes and making POST requst to add todos
 app.post('/todos',(req,res)=>{
   console.log(req.body);
 // creating an instance of Todo model
@@ -32,7 +33,7 @@ app.post('/todos',(req,res)=>{
   });
 });
 
-// POST /users request for users- email,password, tokens
+// POST /users request for adding users- email,password, tokens
 app.post('/users',(req,res)=>{
   console.log(req.body);
 var body = _.pick(req.body,['email','password']);
@@ -48,6 +49,24 @@ user.save().then(()=>{
     res.status(400).send(err);
   });
 });
+
+// POST /user/login - this wiill find the user based on credentials
+// after all make a GET /users/me request with newly returned Token
+app.post('/users/login',(req,res)=>{
+  console.log('req.body',req.body)
+  var body = _.pick(req.body,['email','password']);
+  //calling a User Model function here  findByCredentials(email,password)
+  User.findByCredentials(body.email,body.password).then((user)=>{
+    // res.status().send({user});
+    // We have to return token to user instead of direct response
+      return user.generateAuthToken().then((token)=>{
+        res.header('x-auth', token).send(user); // adding custom header(x-auth) here instead of status
+      });
+  }).catch((e)=>{
+    res.status(400).send();
+  });
+});
+
 
 // GET/users  , authenticating token first ,its a private route without token will not return anything
 app.get('/users/me',authenticate,(req,res)=>{

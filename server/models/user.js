@@ -66,11 +66,31 @@ UserSchema.statics.findByToken = function (token) {
       reject();
     });
   }
-
   return User.findOne({
     '_id': decoded._id,
     'tokens.token': token,
     'tokens.access': 'auth'
+  });
+};
+
+// find user By email credentials
+UserSchema.statics.findByCredentials = function(email,password){
+  var User = this;
+  return User.findOne({email}).then((user)=>{
+    if(!user){
+      return Promise.reject();
+    }
+    // if user exist with email then comopare its password with hashedPassword by using Bcrypt
+    return new Promise((resolve,reject)=>{
+      bcrypt.compare(password, user.password, (err,res)=>{
+        // check the value for resultHash
+        if(res){
+          resolve(user); //return user
+        }else{
+          reject();// return 400 to catch block in server.js
+        }
+      });
+    });
   });
 };
 
